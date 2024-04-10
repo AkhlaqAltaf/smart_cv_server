@@ -1,0 +1,79 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Template</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="{% static style_file %}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Curriculum Vitae</h1>
+
+    <div class="section">
+        <div class="section-header">Personal Information {{ cv_resume.personal_info.profile_pic.url  }}</div>
+        <div class="section-content">
+            {% if cv_resume.personal_info.profile_pic %}
+            <img src="{{ cv_resume.personal_info.profile_pic.url }}" alt="Profile Image" style="max-width: 200px;">
+            {% endif %}
+            <p><strong>Full Name:</strong> {{ cv_resume.personal_info.full_name }}</p>
+            <p><strong>Email:</strong> {{ cv_resume.personal_info.email }}</p>
+            <p><strong>Phone Number:</strong> {{ cv_resume.personal_info.phone_number }}</p>
+            <p><strong>Address:</strong> {{cv_resume.personal_info.address }}</p>
+            <p><strong>Date of Birth:</strong> {{cv_resume.personal_info.date_of_birth }}</p>
+            <p><strong>Nationality:</strong> {{cv_resume.personal_info.nationality }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Education</div>
+        <div class="section-content">
+            <p><strong>Name:</strong> {{cv_resume.education.name }}</p>
+            <p><strong>Field of Study:</strong> {{cv_resume.education.field_of_study }}</p>
+            <p><strong>Institute:</strong> {{cv_resume.education.institute }}</p>
+            <p><strong>Location:</strong> {{ cv_resume.education.location }}</p>
+            <p><strong>Graduation Year:</strong> {{ cv_resume.education.graduation_year }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Work Experience</div>
+        <div class="section-content">
+            <p><strong>Company:</strong> {{ cv_resume.workExperience.company }}</p>
+            <p><strong>Position:</strong> {{ cv_resume.workExperience.position }}</p>
+            <p><strong>Start Date:</strong> {{ cv_resume.workExperience.start_date }}</p>
+            <p><strong>End Date:</strong> {{ cv_resume.workExperience.end_date }}</p>
+            <p><strong>Responsibilities:</strong> {{cv_resume.workExperience.responsibilities }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Certification</div>
+        <div class="section-content">
+            <p><strong>Name:</strong> {{cv_resume.certification.certification_name }}</p>
+            <p><strong>Issuer Name:</strong> {{ issuer_name }}</p>
+            <p><strong>Certification Date:</strong> {{ certification_date }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Skills</div>
+        <div class="section-content">
+            <ul>
+                {% for skill in cv_resume.skills.all %}
+                    <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
