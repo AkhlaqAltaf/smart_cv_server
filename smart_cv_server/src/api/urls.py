@@ -6,7 +6,6 @@ urlpatterns = []
 
 """ TO LEARN SWAGGER - https://drf-yasg.readthedocs.io/en/stable/readme.html --------------------------------------- """
 
-
 schema_view = get_swagger_doc_schema_view()
 urlpatterns += [
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
@@ -18,7 +17,12 @@ urlpatterns += [
 """ Version 1 of the API ------------------------------------------------------------------------------------------- """
 urlpatterns += [
     path('auth/', include('src.api.auth.urls', namespace='auth')),
-    path('cv_resume/' , include('src.api.cv_resume.urls', namespace='cv_resume/')),
+    # MAIN URLS
+
+    path('cv_resume/', include('src.api.cv_resume.urls', namespace='cv_resume/')),
+    path('invitation_card/', include('src.api.invitation_card.urls', namespace='invitation_card')),
+
+    # USER
     path('users/', include('src.api.users.urls', namespace='users')),
 
 ]

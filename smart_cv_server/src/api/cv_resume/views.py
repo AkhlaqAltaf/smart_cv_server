@@ -5,7 +5,7 @@ from src.api.cv_resume.serializers import  CVResumeSerializer
 from src.apps.cv_resume.models import CVResume
 
 
-class ResumeCreateView(viewsets.ModelViewSet):
+class ResumeView(viewsets.ModelViewSet):
     queryset = CVResume.objects.all()
     serializer_class =CVResumeSerializer
     permission_classes = [AllowAny]
