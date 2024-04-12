@@ -24,7 +24,12 @@ urlpatterns = [
     # WEBSITE
 
     path('', include('src.apps.website.urls', namespace='website')),
-    path('', include('src.apps.accounts.urls', namespace='accounts')),
-    path('', include('src.apps.cv_resume.urls', namespace='cv_resume')),
+    path('accounts/', include('src.apps.accounts.urls', namespace='accounts')),
+    path('cv_resume/', include('src.apps.cv_resume.urls', namespace='cv_resume')),
+    path('invitation_card/', include('src.apps.invitation_card.urls', namespace='invitation_card')),
+
+    # API URL
+
+    path('api/', include('src.api.urls', namespace='api'))
 
 ]

@@ -1,0 +1,36 @@
+<!-- invitation_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation Detail</title>
+</head>
+<body>
+
+<section>
+
+    <h1>Invitation Detail</h1>
+    <p><strong>User:</strong> {{ invitation.user }}</p>
+    <p><strong>Event Type:</strong> {{ invitation.event.event_type }}</p>
+    <p><strong>Event Date:</strong> {{ invitation.event.event_date }}</p>
+    <p><strong>Event Time:</strong> {{ invitation.event.event_time }}</p>
+    <p><strong>Event Location:</strong> {{ invitation.event.event_location }}</p>
+    <p><strong>Host Name:</strong> {{ invitation.host.hostname }}</p>
+    <p><strong>Host Email:</strong> {{ invitation.host.host_email }}</p>
+    <p><strong>Host Phone Number:</strong> {{ invitation.host.host_phone_number }}</p>
+    <p><strong>Host Address:</strong> {{ invitation.host.host_address }}</p>
+    <p><strong>Message:</strong> {{ invitation.message.message }}</p>
+    <p><strong>Created On:</strong> {{ invitation.created_on }}</p>
+    </section>
+
+    <form id="download-pdf-form" method="post">
+        {% csrf_token %}
+        <button id="pdf-download-button" type="submit">Download PDF</button>
+    </form>
+
+
+
+
+</body>
+</html>
