@@ -1,13 +1,13 @@
+# urls.py
 from django.urls import path
-
-from dj_rest_auth.views import (
-    LoginView, LogoutView, PasswordChangeView
-)
+from .views import CustomLoginView , GetUserFromTokenView , UserCreateView
 
 app_name = 'auth'
 urlpatterns = [
-    path('login/', LoginView.as_view(), name='rest_login'),
-    path('logout/', LogoutView.as_view(), name='rest_logout'),
-    path('password/change/', PasswordChangeView.as_view(), name='rest_password_change'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('get_user/', GetUserFromTokenView.as_view(), name='get_user'),
+    path('register/', UserCreateView.as_view(), name='register'),
+
+
 ]
 

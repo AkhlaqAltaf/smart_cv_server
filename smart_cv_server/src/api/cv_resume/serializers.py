@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from src.apps.cv_resume.models import PersonalInfo, WorkExperience, Skill, Education, Certification, CVResume, \
     PersonalLanguage, CVSkill, Language
@@ -55,8 +56,17 @@ class CVResumeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # GET DATA
+        print("HIT TO CREATE DATA ", validated_data)
 
         personal_info_data = validated_data.pop('personal_info')
+        user = personal_info_data.get('user')
+        print("USER ....", user)
+        user = get_object_or_404(User, id=user)
+        print("USER ...", user)
+        personal_info_data.update({'user': user})
+        # personal_info_data.update({'user': user})
+        print(personal_info_data)
+
         education_data = validated_data.pop('education')
         work_experience_data = validated_data.pop('workExperience')
         certification_data = validated_data.pop('certification')
@@ -84,7 +94,7 @@ class CVResumeSerializer(serializers.ModelSerializer):
             skill, _ = Skill.objects.get_or_create(**skill_data)
             CVSkill.objects.create(cv_resume=cv_resume, skill=skill)
 
-        return cv_resume
+        return cv_resume.id
 
     def update(self, instance, validated_data):
         personal_info_data = validated_data.pop('personal_info')
@@ -105,13 +115,11 @@ class CVResumeSerializer(serializers.ModelSerializer):
         work_experience_instance = work_experience_serializer.update(instance.workExperience, work_experience_data)
         certification_instance = certification_serializer.update(instance.certification, certification_data)
 
-        # Update many-to-many field 'skills'
         instance.skills.clear()
         for skill_data in skills_data:
             skill, _ = Skill.objects.get_or_create(**skill_data)
             instance.skills.add(skill)
 
-        # Update many-to-many field 'languages' of personal_info
         instance.personal_info.languages.clear()
         for language_data in languages_data:
             language, _ = Language.objects.get_or_create(**language_data)
@@ -120,6 +128,15 @@ class CVResumeSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+class DownloadCVResumeSerializer(serializers.Serializer):
+    cv_resume_id = serializers.IntegerField(required=True)
+    template_id = serializers.IntegerField(required=True)
+
+
+
+
+
 
 
 

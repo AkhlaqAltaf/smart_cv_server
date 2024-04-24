@@ -1,8 +1,12 @@
+import os.path
+
 import requests
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
+from smart_cv_server.settings import BASE_DIR
 from src.apps.cv_resume.forms import CVResumeForm
 from src.apps.cv_resume.models import Certification, CVResume, CVSkill, WorkExperience, Education, PersonalInfo
 
@@ -101,9 +105,11 @@ class CVResumeView(TemplateView):
     template_name = 'templates/practice_template.html'
 
     def get_context_data(self, **kwargs):
+        _id = self.kwargs['id']
+        cv_resume = get_object_or_404(CVResume, id=_id)
         context = super().get_context_data(**kwargs)
-        cv_resume = CVResume.objects.filter(personal_info__user=self.request.user)[0]
         context['cv_resume'] = cv_resume
-        context['style_file'] = f'templates/template{1}.css'
+        style_file = os.path.join(BASE_DIR,'static','css','templates','template1.css')
+        context['style_file'] = style_file
 
         return context

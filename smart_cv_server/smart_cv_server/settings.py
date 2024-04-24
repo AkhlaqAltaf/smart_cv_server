@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-=9!ovn98g&21g+@s62y&*5r#iol^4y0v(6e%3r8*b7%3jrniod
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'smart_cv_server.urls'
@@ -86,7 +87,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smart_cv_server.wsgi.application'
 
-# Database
+# AUTH
+
+# settings.py
+AUTHENTICATION_BACKENDS = [
+    'src.api.auth.auth_backends.EmailAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# Datab
+#
+#
+# ase
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
@@ -116,12 +128,34 @@ AUTH_PASSWORD_VALIDATORS = [
 # PERMISSIONS
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+
+        'rest_framework.authentication.TokenAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
+
+# CORS
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

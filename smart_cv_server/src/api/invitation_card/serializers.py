@@ -43,6 +43,7 @@ class InvitationSerializer(serializers.ModelSerializer):
         host, _ = HostDetails.objects.get_or_create(**host)
         event, _ = EventDetails.objects.get_or_create(**event)
         message, _ = MessageDetails.objects.get_or_create(**message)
+        invitation,_ = Invitation.objects.get_or_create(user = user,host=host , event=event, message=message)
 
         invitation = Invitation.objects.create(
             user=user,
@@ -76,5 +77,14 @@ class InvitationSerializer(serializers.ModelSerializer):
 
         return instance
 
+
     def delete(self, instance):
         instance.delete()
+
+
+
+
+
+class DownloadInvitationCardSerializer(serializers.Serializer):
+    cv_resume_id = serializers.IntegerField(required=True)
+    template_id = serializers.IntegerField(required=True)
