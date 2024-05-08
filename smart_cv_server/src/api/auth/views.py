@@ -15,14 +15,9 @@ class CustomLoginView(BaseLoginView):
     serializer_class = CustomLoginSerializer
 
     def post(self, request, *args, **kwargs):
-        print("Request body: ", request.data)
         serializer = self.get_serializer(data=request.data)
-        print("DaTa : ", serializer.is_valid())
         serializer.is_valid(raise_exception=True)
-        print("serializer data : " , serializer.validated_data)
         user = serializer.validated_data['user']
-        print("USER : ",user)
-        print("Status Code : ",status.HTTP_200_OK)
         token, _ = Token.objects.get_or_create(user=user)
         return Response({'token': token.key}, status=status.HTTP_200_OK)
 

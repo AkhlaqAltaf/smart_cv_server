@@ -27,6 +27,7 @@ urlpatterns = [
     path('accounts/', include('src.apps.accounts.urls', namespace='accounts')),
     path('', include('src.apps.cv_resume.urls', namespace='cv_resume')),
     path('invitation_card/', include('src.apps.invitation_card.urls', namespace='invitation_card')),
+    path('cover_letter/', include('src.apps.cover_letter.urls', namespace='cover_letter')),
 
     # API URL
 

@@ -36,7 +36,6 @@ class DownloadInvitationCardView(APIView):
         _id = kwargs.get('invitation_id')
         print("DATA ...",_id)
         id = Invitation.objects.last()
-        print(id.invitation_id)
         invitation_card = get_object_or_404(Invitation, pk=_id)
 
         print("DATA IS HERE ...",invitation_card.user)

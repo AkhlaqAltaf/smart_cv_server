@@ -1,5 +1,6 @@
-import os.path
 from io import BytesIO
+from io import BytesIO
+
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
@@ -8,28 +9,26 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from xhtml2pdf import pisa
 
-from smart_cv_server.settings import BASE_DIR
-from src.api.cv_resume.serializers import CVResumeSerializer, DownloadCVResumeSerializer
-from src.apps.cv_resume.models import CVResume
+from src.api.cover_letter.serializers import CoverLetterSerializer
+from src.apps.cover_letter.models import CoverLetter
 
 
-class ResumeView(viewsets.ModelViewSet):
-    queryset = CVResume.objects.all()
-    serializer_class = CVResumeSerializer
+class CoverLetterView(viewsets.ModelViewSet):
+    queryset = CoverLetter.objects.all()
+    serializer_class = CoverLetterSerializer
     permission_classes = [AllowAny]
 
 
-class DownloadCvResumeView(APIView):
+class DownloadCoverLetter(APIView):
     permission_classes = [AllowAny]
-    serializer_class = DownloadCVResumeSerializer
+
     def get(self, request, *args, **kwargs):
-        _id = kwargs.get('cv_resume_id')
-        cv_resume = get_object_or_404(CVResume, pk=_id)
+        _id = kwargs.get('cover_letter_id')
+        cover_letter = get_object_or_404(CoverLetter, pk=_id)
 
-        print("CV RESUME ", cv_resume.personal_info.profile_pic)
-        template = get_template('templates/practice_template.html')
-        style_file = os.path.join(BASE_DIR, 'static', 'css', 'templates', 'template1.css')
-        html = template.render({'cv_resume': cv_resume, 'style_file': style_file})
+        template = get_template('cover_letter.html')
+
+        html = template.render({'cover_letter': cover_letter})
 
         buffer = BytesIO()
         pisa_status = pisa.CreatePDF(html, dest=buffer)
@@ -40,24 +39,23 @@ class DownloadCvResumeView(APIView):
         buffer.close()
 
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{cv_resume.personal_info.full_name}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="{cover_letter.name}.pdf"'
         response.write(pdf_data)
 
         return response
 
 
-class CreateCvResume(APIView):
+class CreateCoverLetterView(APIView):
     permission_classes = [AllowAny]
-    serializer_class =CVResumeSerializer
+    serializer_class = CoverLetterSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            cv_resume =serializer.create(request.data)
+            cover_letter_id = serializer.create(request.data)
             response = HttpResponse(content_type='application/pdf')
-            response['id']=cv_resume
+            response['id'] = cover_letter_id
             return response
 
         else:
             return HttpResponse("Data Not Valid")
-

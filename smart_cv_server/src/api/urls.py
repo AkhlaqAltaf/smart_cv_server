@@ -21,6 +21,7 @@ urlpatterns += [
 
     path('cv_resume/', include('src.api.cv_resume.urls', namespace='cv_resume/')),
     path('invitation_card/', include('src.api.invitation_card.urls', namespace='invitation_card')),
+    path('cover_letter/', include('src.api.cover_letter.urls', namespace='cover_letter')),
 
     # USER
     path('users/', include('src.api.users.urls', namespace='users')),

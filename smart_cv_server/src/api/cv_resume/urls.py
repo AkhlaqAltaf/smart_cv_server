@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from smart_cv_server import settings
-from .views import ResumeView, DownloadCvResumeView , CreateCvResume
+from .views import ResumeView, DownloadCvResumeView, CreateCvResume
 
 app_name = 'cv_resume'
 
@@ -13,5 +13,5 @@ router.register(r'', ResumeView)
 urlpatterns = [
                   path('', include(router.urls)),
                   path('download/<int:cv_resume_id>', DownloadCvResumeView.as_view(), name='download'),
-                  path('create' , CreateCvResume.as_view() , name='create'),
+                  path('create', CreateCvResume.as_view(), name='create'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

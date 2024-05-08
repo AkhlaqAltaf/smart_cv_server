@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'src.apps.cv_resume.apps.CvResumeAppConfig',
     'src.apps.accounts.apps.AccountsConfig',
     'src.apps.invitation_card.apps.InvitationCardConfig',
+    'src.apps.cover_letter.apps.CoverLetterAppConfig',
 
     # WEB
     'src.apps.website',
