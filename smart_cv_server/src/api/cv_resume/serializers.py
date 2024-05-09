@@ -54,6 +54,12 @@ class CVResumeSerializer(serializers.ModelSerializer):
         model = CVResume
         fields = '__all__'
 
+    def get_cv_resumes(self, user_id):
+        # Query CV resumes associated with the provided user ID
+        cv_resumes = CVResume.objects.filter(personal_info__user=user_id)
+        # Serialize the queryset
+        serialized_data = self.__class__(cv_resumes, many=True).data
+        return serialized_data
     def create(self, validated_data):
         # GET DATA
         print("HIT TO CREATE DATA ", validated_data)
@@ -129,14 +135,7 @@ class CVResumeSerializer(serializers.ModelSerializer):
 
         return instance
 
+
 class DownloadCVResumeSerializer(serializers.Serializer):
     cv_resume_id = serializers.IntegerField(required=True)
     template_id = serializers.IntegerField(required=True)
-
-
-
-
-
-
-
-

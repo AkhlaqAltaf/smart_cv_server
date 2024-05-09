@@ -99,6 +99,7 @@ class CVResume(models.Model):
     certification = models.ForeignKey(Certification, on_delete=models.CASCADE)
     skills = models.ManyToManyField(Skill, through='CVSkill')
 
+
     def __str__(self):
         return self.personal_info.full_name
 

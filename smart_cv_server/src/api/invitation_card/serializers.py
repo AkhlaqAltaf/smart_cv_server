@@ -82,6 +82,12 @@ class InvitationSerializer(serializers.ModelSerializer):
         instance.delete()
 
 
+    def get_cv_resumes(self, user_id):
+        invitation = Invitation.objects.filter(user_id=user_id)
+        serialized_data = self.__class__(invitation, many=True).data
+        return serialized_data
+
+
 
 
 

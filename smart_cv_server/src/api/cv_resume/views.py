@@ -1,16 +1,20 @@
 import os.path
 from io import BytesIO
-from django.http import HttpResponse
+
+from django.core.serializers import serialize
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.utils import json
 from rest_framework.views import APIView
 from xhtml2pdf import pisa
 
 from smart_cv_server.settings import BASE_DIR
 from src.api.cv_resume.serializers import CVResumeSerializer, DownloadCVResumeSerializer
-from src.apps.cv_resume.models import CVResume
+from src.apps.cv_resume.models import CVResume, PersonalInfo
 
 
 class ResumeView(viewsets.ModelViewSet):
@@ -61,3 +65,12 @@ class CreateCvResume(APIView):
         else:
             return HttpResponse("Data Not Valid")
 
+
+
+class GetCVResumesView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, id):
+        serializer = CVResumeSerializer()
+        cv_resumes = serializer.get_cv_resumes(id)
+        return Response(cv_resumes)

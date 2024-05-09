@@ -1,11 +1,13 @@
 from io import BytesIO
 from io import BytesIO
 
-from django.http import HttpResponse
+from django.core.serializers import serialize
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
+from rest_framework.utils import json
 from rest_framework.views import APIView
 from xhtml2pdf import pisa
 
@@ -59,3 +61,14 @@ class CreateCoverLetterView(APIView):
 
         else:
             return HttpResponse("Data Not Valid")
+
+
+class GetCoverLettersView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, id):
+        cover_letters = CoverLetter.objects.filter(user_id=id).all()
+        serialized_cover_letters = serialize('json', cover_letters)
+        response_json = json.loads(serialized_cover_letters)
+
+        return JsonResponse(response_json, safe=False)
