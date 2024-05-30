@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from dj_rest_auth.serializers import LoginSerializer
 
+from rest_framework import serializers
+
 
 class CustomLoginSerializer(LoginSerializer):
     email = serializers.EmailField(required=True)
@@ -29,7 +31,6 @@ class CustomLoginSerializer(LoginSerializer):
         attrs['user'] = user
         return attrs
 
-    from rest_framework import serializers
 
     class UserSerializer(serializers.Serializer):
         id = serializers.IntegerField()

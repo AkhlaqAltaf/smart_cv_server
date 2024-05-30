@@ -20,7 +20,7 @@ urlpatterns += [
     # MAIN URLS
 
     path('cv_resume/', include('src.api.cv_resume.urls', namespace='cv_resume/')),
-    path('invitation_card/', include('src.api.invitation_card.urls', namespace='invitation_card')),
+    path('invitation_cards/', include('src.api.invitation_cards.urls', namespace='invitation_cards')),
     path('cover_letter/', include('src.api.cover_letter.urls', namespace='cover_letter')),
 
     # USER

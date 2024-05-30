@@ -8,12 +8,12 @@ from django.template.loader import render_to_string, get_template
 from django.views.generic import TemplateView, DetailView
 from xhtml2pdf import pisa
 
-from src.apps.invitation_card.forms import CombinedForm
-from src.apps.invitation_card.models import Invitation
+from src.apps.invitation_cards.forms import CombinedForm
+from src.apps.invitation_cards.models import Invitation
 
 
 class InvitationCardCreateView(TemplateView):
-    template_name = 'invitation_card.html'
+    template_name = 'invitation_cards.html'
 
     def get_context_data(self, **kwargs):
         super(InvitationCardCreateView, self).get_context_data(**kwargs)
@@ -30,7 +30,7 @@ class InvitationCardCreateView(TemplateView):
 
         if combined_form.is_valid():
 
-            return HttpResponseRedirect(f"invitation_card/{_id}")
+            return HttpResponseRedirect(f"invitation_cards/{_id}")
         else:
             pass
 

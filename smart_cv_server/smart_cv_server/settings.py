@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -40,7 +41,7 @@ INSTALLED_APPS = [
 
     'src.apps.cv_resume.apps.CvResumeAppConfig',
     'src.apps.accounts.apps.AccountsConfig',
-    'src.apps.invitation_card.apps.InvitationCardConfig',
+    'src.apps.invitation_cards.apps.InvitationCardConfig',
     'src.apps.cover_letter.apps.CoverLetterAppConfig',
 
     # WEB

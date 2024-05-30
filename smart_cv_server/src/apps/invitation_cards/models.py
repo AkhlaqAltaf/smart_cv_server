@@ -14,8 +14,8 @@ class HostDetails(models.Model):
 
 class EventDetails(models.Model):
     event_type = models.CharField(max_length=100)
-    event_date = models.DateTimeField()
-    event_time = models.TimeField()
+    event_date = models.CharField(max_length=100)
+    event_time = models.CharField(max_length=100)
     event_location = models.CharField(max_length=100)
 
     def __str__(self):

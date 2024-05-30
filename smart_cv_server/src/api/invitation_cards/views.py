@@ -11,8 +11,8 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 from xhtml2pdf import pisa
 
-from src.api.invitation_card.serializers import InvitationSerializer, DownloadInvitationCardSerializer
-from src.apps.invitation_card.models import Invitation
+from src.api.invitation_cards.serializers import InvitationSerializer, DownloadInvitationCardSerializer
+from src.apps.invitation_cards.models import Invitation
 
 
 class InvitationCardView(viewsets.ModelViewSet):
@@ -37,15 +37,13 @@ class DownloadInvitationCardView(APIView):
 
     def get(self, request, *args, **kwargs):
         _id = kwargs.get('invitation_id')
-        print("DATA ...",_id)
-        id = Invitation.objects.last()
         invitation_card = get_object_or_404(Invitation, pk=_id)
 
         print("DATA IS HERE ...",invitation_card.user)
 
         template = get_template('templates/example_template.html')
-        # style_file = os.path.join(BASE_DIR,'static','css','templates','template1.css')
-        html = template.render({'cv_resume': invitation_card})
+        html = template.render({'invitation': invitation_card})
+
 
         buffer = BytesIO()
         pisa_status = pisa.CreatePDF(html, dest=buffer)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from src.apps.invitation_card.models import (
+from src.apps.invitation_cards.models import (
     Invitation, HostDetails, EventDetails, MessageDetails
 )
 

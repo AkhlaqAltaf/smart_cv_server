@@ -58,7 +58,7 @@ class CreateCvResume(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             cv_resume =serializer.create(request.data)
-            response = HttpResponse(content_type='application/pdf')
+            response = HttpResponse()
             response['id']=cv_resume
             return response
 
