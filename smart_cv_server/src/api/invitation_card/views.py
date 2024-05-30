@@ -11,8 +11,8 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 from xhtml2pdf import pisa
 
-from src.api.invitation_cards.serializers import InvitationSerializer, DownloadInvitationCardSerializer
-from src.apps.invitation_cards.models import Invitation
+from src.api.invitation_card.serializers import InvitationSerializer, DownloadInvitationCardSerializer
+from src.apps.invitation_card.models import Invitation
 
 
 class InvitationCardView(viewsets.ModelViewSet):

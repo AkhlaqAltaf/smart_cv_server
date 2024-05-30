@@ -46,10 +46,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='invitation_cards.eventdetails')),
-                ('host', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='invitation_cards.hostdetails')),
+                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='invitation_card.eventdetails')),
+                ('host', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='invitation_card.hostdetails')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('message', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='invitation_cards.messagedetails')),
+                ('message', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='invitation_card.messagedetails')),
             ],
         ),
     ]
