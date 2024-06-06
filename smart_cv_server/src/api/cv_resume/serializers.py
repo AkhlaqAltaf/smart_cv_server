@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from src.apps.cv_resume.models import PersonalInfo, WorkExperience, Skill, Education, Certification, CVResume, \
-    PersonalLanguage, CVSkill, Language
+    PersonalLanguage, CVSkill, Language, ProfilePhoto
 from django.contrib.auth.models import User
 
 
@@ -9,14 +9,22 @@ class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
         fields = '__all__'
+class ProfilePicSearializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfilePhoto
+        fields = '__all__'
 
 
 class PersonalInfoSerializer(serializers.ModelSerializer):
     languages = LanguageSerializer(many=True)
+    profile_photo = ProfilePicSearializer(many=False)
 
     class Meta:
         model = PersonalInfo
         fields = '__all__'
+        extra_kwargs = {
+            'profile_pic': {'required': True},  # This makes the profile_pic field optional
+        }
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
@@ -61,17 +69,16 @@ class CVResumeSerializer(serializers.ModelSerializer):
         serialized_data = self.__class__(cv_resumes, many=True).data
         return serialized_data
     def create(self, validated_data):
-        # GET DATA
-        print("HIT TO CREATE DATA ", validated_data)
-
         personal_info_data = validated_data.pop('personal_info')
-        user = personal_info_data.get('user')
-        print("USER ....", user)
-        user = get_object_or_404(User, id=user)
-        print("USER ...", user)
-        personal_info_data.update({'user': user})
-        # personal_info_data.update({'user': user})
-        print(personal_info_data)
+        user = personal_info_data.pop('user')
+        user_instance = get_object_or_404(User, id=user)
+
+        profile_photo_data = personal_info_data.pop('profile_photo', None)
+        profile_photo_instance = None
+        if profile_photo_data:
+            profile_photo_instance = ProfilePhoto.objects.create(**profile_photo_data)
+
+        personal_info_instance = PersonalInfo.objects.create(user=user_instance, profile_photo=profile_photo_instance, **personal_info_data)
 
         education_data = validated_data.pop('education')
         work_experience_data = validated_data.pop('workExperience')
@@ -79,28 +86,26 @@ class CVResumeSerializer(serializers.ModelSerializer):
         skills_data = validated_data.pop('skills')
         languages_data = personal_info_data.pop('languages')
 
-        # POST DATA
-
-        personal_info = PersonalInfo.objects.create(**personal_info_data)
-        education = Education.objects.create(**education_data)
-        work_experience = WorkExperience.objects.create(**work_experience_data)
-        certification = Certification.objects.create(**certification_data)
+        education_instance = Education.objects.create(**education_data)
+        work_experience_instance = WorkExperience.objects.create(**work_experience_data)
+        certification_instance = Certification.objects.create(**certification_data)
 
         for language_data in languages_data:
             language, create = Language.objects.get_or_create(**language_data)
-            PersonalLanguage.objects.create(personal_info=personal_info, language=language)
+            PersonalLanguage.objects.create(personal_info=personal_info_instance, language=language)
+
         cv_resume = CVResume.objects.create(
-            personal_info=personal_info,
-            education=education,
-            workExperience=work_experience,
-            certification=certification
+            personal_info=personal_info_instance,
+            education=education_instance,
+            workExperience=work_experience_instance,
+            certification=certification_instance
         )
 
         for skill_data in skills_data:
             skill, _ = Skill.objects.get_or_create(**skill_data)
             CVSkill.objects.create(cv_resume=cv_resume, skill=skill)
 
-        return cv_resume.id
+        return cv_resume
 
     def update(self, instance, validated_data):
         personal_info_data = validated_data.pop('personal_info')
@@ -138,4 +143,4 @@ class CVResumeSerializer(serializers.ModelSerializer):
 
 class DownloadCVResumeSerializer(serializers.Serializer):
     cv_resume_id = serializers.IntegerField(required=True)
-    template_id = serializers.IntegerField(required=True)
+    template_type = serializers.IntegerField(required=True)

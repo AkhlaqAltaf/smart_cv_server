@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from smart_cv_server import settings
 
 
 # PERSONAL INFORMATION
@@ -10,14 +11,22 @@ class Language(models.Model):
         return self.name
 
 
+class ProfilePhoto(models.Model):
+    profile_pic = models.ImageField(upload_to='profile_pics', blank=True, null=True)
+
+    @property
+    def profile_pic_url(self):
+        if self.profile_pic:
+            return '{}{}'.format(settings.MEDIA_URL, self.profile_pic)
+        return None
+
 class PersonalInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to='profile_pics',blank=True ,null=True)
     full_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
+    email = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=50)
-    address = models.CharField(max_length=100)
-    date_of_birth = models.DateField()
+    address = models.CharField(max_length=100,blank=True,null=True)
+    date_of_birth = models.CharField(max_length=100)
     nationality = models.CharField(max_length=50)
     languages = models.ManyToManyField(Language, through="PersonalLanguage")
 
@@ -47,8 +56,8 @@ class PersonalLanguage(models.Model):
 class WorkExperience(models.Model):
     company = models.CharField(max_length=50)
     position = models.CharField(max_length=50)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.CharField(max_length=100)
+    end_date = models.CharField(max_length=100)
     responsibilities = models.CharField(max_length=50)
 
     def __str__(self):
@@ -82,7 +91,7 @@ class Education(models.Model):
 class Certification(models.Model):
     name = models.CharField(max_length=50)
     issuer_name = models.CharField(max_length=50)
-    date = models.DateField()
+    date = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -92,12 +101,14 @@ class Certification(models.Model):
 
 
 class CVResume(models.Model):
-
     personal_info = models.ForeignKey(PersonalInfo, on_delete=models.CASCADE)
     education = models.ForeignKey(Education, on_delete=models.CASCADE)
     workExperience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
     certification = models.ForeignKey(Certification, on_delete=models.CASCADE)
     skills = models.ManyToManyField(Skill, through='CVSkill')
+    prifile_picture = models.ForeignKey(ProfilePhoto,on_delete=models.CASCADE,null=True,blank=True)
+    body = models.TextField(blank=True,null=True)
+
 
 
     def __str__(self):

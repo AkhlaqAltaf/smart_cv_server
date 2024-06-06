@@ -24,6 +24,8 @@ class EventDetails(models.Model):
 
 class MessageDetails(models.Model):
     message = models.TextField(max_length=1000)
+    body = models.TextField(blank=True,null=True)
+
 
     def __str__(self):
         return self.message

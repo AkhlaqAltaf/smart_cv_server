@@ -1,20 +1,17 @@
-import os.path
-from io import BytesIO
+import json
 
-from django.core.serializers import serialize
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.utils import json
 from rest_framework.views import APIView
-from xhtml2pdf import pisa
+from weasyprint import HTML
 
-from smart_cv_server.settings import BASE_DIR
 from src.api.cv_resume.serializers import CVResumeSerializer, DownloadCVResumeSerializer
-from src.apps.cv_resume.models import CVResume, PersonalInfo
+from src.apps.cv_resume.models import CVResume
 
 
 class ResumeView(viewsets.ModelViewSet):
@@ -26,46 +23,52 @@ class ResumeView(viewsets.ModelViewSet):
 class DownloadCvResumeView(APIView):
     permission_classes = [AllowAny]
     serializer_class = DownloadCVResumeSerializer
+
     def get(self, request, *args, **kwargs):
         _id = kwargs.get('cv_resume_id')
+        template_type = kwargs.get('template_type')
         cv_resume = get_object_or_404(CVResume, pk=_id)
+        profile_pic_url = request.build_absolute_uri(cv_resume.personal_info.profile_pic.url)
+        template = get_template(f'cv_resumes/{template_type}.html')
+        html = template.render({'cv_resume': cv_resume, 'profile_pic_url': profile_pic_url})
 
-        print("CV RESUME ", cv_resume.personal_info.profile_pic)
-        template = get_template('templates/practice_template.html')
-        style_file = os.path.join(BASE_DIR, 'static', 'css', 'templates', 'template1.css')
-        html = template.render({'cv_resume': cv_resume, 'style_file': style_file})
+        pdf_file = HTML(string=html).write_pdf()
 
-        buffer = BytesIO()
-        pisa_status = pisa.CreatePDF(html, dest=buffer)
-        if pisa_status.err:
-            return HttpResponse('PDF generation error!', status=500)
-
-        pdf_data = buffer.getvalue()
-        buffer.close()
-
-        response = HttpResponse(content_type='application/pdf')
+        response = HttpResponse(pdf_file, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{cv_resume.personal_info.full_name}.pdf"'
-        response.write(pdf_data)
-
         return response
 
 
-class CreateCvResume(APIView):
+class CVResumeCreateView(APIView):
     permission_classes = [AllowAny]
-    serializer_class =CVResumeSerializer
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+    parser_classes = (MultiPartParser, FormParser)
+
+
+    def post(self, request, *args, **kwargs):
+
+        data = request.data.dict()
+        print(data)
+
+        personal_info = json.loads(data.get('personal_info'))
+        education = json.loads(data.get('education'))
+        work_experience = json.loads(data.get('work_experience'))
+        certification = json.loads(data.get('certification'))
+        skills = json.loads(data.get('skills'))
+        profile_picture = request.FILES.get('profile_picture')
+
+        data['personal_info'] = personal_info
+        data['education'] = education
+        data['work_experience'] = work_experience
+        data['certification'] = certification
+        data['skills'] = skills
+        data['profile_picture'] = {'profile_pic': profile_picture}
+
+        serializer = CVResumeSerializer(data=data)
         if serializer.is_valid():
-            cv_resume =serializer.create(request.data)
-            response = HttpResponse()
-            response['id']=cv_resume
-            return response
-
-        else:
-            return HttpResponse("Data Not Valid")
-
-
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GetCVResumesView(APIView):
     permission_classes = [AllowAny]

@@ -19,6 +19,7 @@
             padding: 20px;
             margin-top: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
         h1 {
             font-size: 24px;
@@ -46,6 +47,10 @@
         .section-content ul li {
             margin-bottom: 5px;
         }
+        .profile-pic {
+            max-width: 150px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -56,8 +61,8 @@
     <div class="section">
         <div class="section-header">Personal Information</div>
         <div class="section-content">
-            {% if cv_resume.personal_info.profile_pic %}
-                <img src="{{ cv_resume.personal_info.profile_pic.url }}" alt="Profile Image" class="img-thumbnail mb-3" style="max-width: 150px;">
+            {% if profile_pic_url %}
+                <img src="{{profile_pic_url}}" alt="Profile Image" class="img-thumbnail profile-pic">
             {% endif %}
             <p><strong>Full Name:</strong> {{ cv_resume.personal_info.full_name }}</p>
             <p><strong>Email:</strong> {{ cv_resume.personal_info.email }}</p>
@@ -107,6 +112,13 @@
                     <li>{{ skill.name }}</li>
                 {% endfor %}
             </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Additional Information</div>
+        <div class="section-content">
+            {{ cv_resume.body|safe }}
         </div>
     </div>
 </div>

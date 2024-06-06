@@ -102,14 +102,20 @@ from django.views.generic import TemplateView
 
 
 class CVResumeView(TemplateView):
-    template_name = 'templates/practice_template.html'
+    def get_template_names(self):
+        template_type = self.kwargs.get('template_type', 'default')
+        return [f'cv_resumes/{template_type}.html']
 
     def get_context_data(self, **kwargs):
         _id = self.kwargs['id']
+        template_type = self.kwargs['template_type']
         cv_resume = get_object_or_404(CVResume, id=_id)
         context = super().get_context_data(**kwargs)
         context['cv_resume'] = cv_resume
-        style_file = os.path.join(BASE_DIR,'static','css','templates','template1.css')
+        profile_pic_url = cv_resume.personal_info.profile_pic.url
+
+        style_file = os.path.join(BASE_DIR, 'static', 'css', 'templates', f'{template_type}.css')
         context['style_file'] = style_file
+        context['profile_pic_url']=profile_pic_url
 
         return context
