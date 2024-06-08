@@ -8,7 +8,7 @@ router.register(r'', InvitationCardView)
 app_name = 'invitation_card'
 urlpatterns = [
     path('', include(router.urls)),
-    path('download/<int:invitation_id>', DownloadInvitationCardView.as_view(), name='download'),
+    path('download/<int:invitation_id>/<str:template_type>', DownloadInvitationCardView.as_view(), name='download'),
     path('invitationcards/<int:id>', GetInvitationCardsView.as_view(), name='invitationcards')
 
 ]

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic CV Template</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 36px;
+            margin: 10px 0;
+            color: #333;
+        }
+        .header p {
+            font-size: 18px;
+            color: #777;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #007BFF;
+            border-bottom: 2px solid #007BFF;
+            padding-bottom: 5px;
+        }
+        .section-content {
+            margin-left: 20px;
+        }
+        .publication {
+            margin-bottom: 10px;
+        }
+        .contact-info {
+            list-style: none;
+            padding: 0;
+        }
+        .contact-info li {
+            margin-bottom: 10px;
+        }
+        .contact-info i {
+            margin-right: 10px;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        {% if profile_pic_url %}
+            <img src="{{ profile_pic_url }}" alt="Profile Image" style="max-width: 100px; border-radius: 50%; margin-bottom: 10px;">
+        {% endif %}
+        <h1>{{ cv_resume.personal_info.full_name }}</h1>
+        <p>{{ cv_resume.personal_info.profession }}</p>
+        <ul class="contact-info">
+            <li><i class="fas fa-phone-alt"></i>{{ cv_resume.personal_info.phone_number }}</li>
+            <li><i class="fas fa-envelope"></i>{{ cv_resume.personal_info.email }}</li>
+            <li><i class="fas fa-map-marker-alt"></i>{{ cv_resume.personal_info.address }}</li>
+            <li><i class="fas fa-birthday-cake"></i>{{ cv_resume.personal_info.date_of_birth }}</li>
+            <li><i class="fas fa-flag"></i>{{ cv_resume.personal_info.nationality }}</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-header">About Me</div>
+        <div class="section-content">
+            <p>{{ cv_resume.personal_info.about_me }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Education</div>
+        <div class="section-content">
+            {% for education in cv_resume.education.all %}
+            <p><strong>{{ education.degree }}</strong>, {{ education.field_of_study }}</p>
+            <p>{{ education.institute }} - {{ education.location }} ({{ education.graduation_year }})</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Research Interests</div>
+        <div class="section-content">
+            <p>{{ cv_resume.research_interests }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Work Experience</div>
+        <div class="section-content">
+            {% for experience in cv_resume.work_experience.all %}
+            <p><strong>{{ experience.position }}</strong>, {{ experience.company }}</p>
+            <p>{{ experience.start_date }} - {{ experience.end_date }}</p>
+            <p>{{ experience.responsibilities }}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Publications</div>
+        <div class="section-content">
+            {% for publication in cv_resume.publications.all %}
+            <div class="publication">
+                <p><strong>{{ publication.title }}</strong></p>
+                <p>{{ publication.journal }} - {{ publication.date }}</p>
+                <p>{{ publication.authors }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Awards and Honors</div>
+        <div class="section-content">
+            {% for award in cv_resume.awards.all %}
+            <p>{{ award.title }} - {{ award.year }}</p>
+            <p>{{ award.description }}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Professional Memberships</div>
+        <div class="section-content">
+            {% for membership in cv_resume.memberships.all %}
+            <p>{{ membership.organization }} - {{ membership.role }}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Skills</div>
+        <div class="section-content">
+            <ul>
+                {% for skill in cv_resume.skills.all %}
+                <li>{{ skill.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Additional Information</div>
+        <div class="section-content">
+            {{ cv_resume.body|safe }}
+        </div>
+    </div>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

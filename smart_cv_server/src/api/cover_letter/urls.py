@@ -11,7 +11,7 @@ router.register(r'', CoverLetterView)
 
 urlpatterns = [
                   path('', include(router.urls)),
-                  path('download/<int:cover_letter_id>', DownloadCoverLetter.as_view(), name='download'),
+                  path('download/<int:cover_letter_id>/<str:cover_letter_type>', DownloadCoverLetter.as_view(), name='download'),
                   path('create', CreateCoverLetterView.as_view(), name='create'),
                   path('cover-letters/<int:id>', GetCoverLettersView.as_view(), name='cover-letters'),
 

@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from weasyprint import HTML
 
+from src.api.cv_resume.ai.generate import CVGenAI
 from src.api.cv_resume.serializers import CVResumeSerializer, DownloadCVResumeSerializer
 from src.apps.cv_resume.models import CVResume
 
@@ -27,8 +28,17 @@ class DownloadCvResumeView(APIView):
     def get(self, request, *args, **kwargs):
         _id = kwargs.get('cv_resume_id')
         template_type = kwargs.get('template_type')
+        gen_ai = CVGenAI()
         cv_resume = get_object_or_404(CVResume, pk=_id)
-        profile_pic_url = request.build_absolute_uri(cv_resume.personal_info.profile_pic.url)
+        if cv_resume.prifile_picture:
+            profile_ = cv_resume.prifile_picture.profile_pic.url
+        else:
+            profile_ = None
+        body = gen_ai.generate_cv_body(cv_resume)
+        cv_resume.body = body
+
+
+        profile_pic_url = request.build_absolute_uri(profile_)
         template = get_template(f'cv_resumes/{template_type}.html')
         html = template.render({'cv_resume': cv_resume, 'profile_pic_url': profile_pic_url})
 

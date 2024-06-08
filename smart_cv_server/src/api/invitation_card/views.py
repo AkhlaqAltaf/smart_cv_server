@@ -37,11 +37,10 @@ class DownloadInvitationCardView(APIView):
 
     def get(self, request, *args, **kwargs):
         _id = kwargs.get('invitation_id')
+        type = kwargs.get('template_type')
         invitation_card = get_object_or_404(Invitation, pk=_id)
 
-        print("DATA IS HERE ...",invitation_card.user)
-
-        template = get_template('templates/example_template.html')
+        template = get_template(f'invitation_cards/{type}.html')
         html = template.render({'invitation': invitation_card})
 
 

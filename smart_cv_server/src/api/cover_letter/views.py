@@ -11,6 +11,7 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 from xhtml2pdf import pisa
 
+from src.api.cover_letter.ai.generate import CoverLetterGenAI
 from src.api.cover_letter.serializers import CoverLetterSerializer
 from src.apps.cover_letter.models import CoverLetter
 
@@ -26,10 +27,14 @@ class DownloadCoverLetter(APIView):
 
     def get(self, request, *args, **kwargs):
         _id = kwargs.get('cover_letter_id')
+        type = kwargs.get('cover_letter_type')
         cover_letter = get_object_or_404(CoverLetter, pk=_id)
 
-        template = get_template('cover_letter.html')
-
+        ai = CoverLetterGenAI()
+        body = ai.generate_cover_letter_body(cover_letter=cover_letter)
+        print(body)
+        cover_letter.body = body
+        template = get_template(f'cover_letters/{type}.html')
         html = template.render({'cover_letter': cover_letter})
 
         buffer = BytesIO()
@@ -55,7 +60,7 @@ class CreateCoverLetterView(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             cover_letter_id = serializer.create(request.data)
-            response = HttpResponse(content_type='application/pdf')
+            response = HttpResponse()
             response['id'] = cover_letter_id
             return response
 

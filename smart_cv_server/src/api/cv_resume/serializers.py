@@ -17,14 +17,10 @@ class ProfilePicSearializer(serializers.ModelSerializer):
 
 class PersonalInfoSerializer(serializers.ModelSerializer):
     languages = LanguageSerializer(many=True)
-    profile_photo = ProfilePicSearializer(many=False)
 
     class Meta:
         model = PersonalInfo
         fields = '__all__'
-        extra_kwargs = {
-            'profile_pic': {'required': True},  # This makes the profile_pic field optional
-        }
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
@@ -57,6 +53,9 @@ class CVResumeSerializer(serializers.ModelSerializer):
     workExperience = WorkExperienceSerializer()
     certification = CertificationSerializer()
     skills = SkillSerializer(many=True)
+    prifile_picture = ProfilePicSearializer(many=False)
+
+
 
     class Meta:
         model = CVResume

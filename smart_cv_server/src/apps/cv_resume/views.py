@@ -112,7 +112,7 @@ class CVResumeView(TemplateView):
         cv_resume = get_object_or_404(CVResume, id=_id)
         context = super().get_context_data(**kwargs)
         context['cv_resume'] = cv_resume
-        profile_pic_url = cv_resume.personal_info.profile_pic.url
+        profile_pic_url = cv_resume.prifile_picture.profile_pic.url
 
         style_file = os.path.join(BASE_DIR, 'static', 'css', 'templates', f'{template_type}.css')
         context['style_file'] = style_file
