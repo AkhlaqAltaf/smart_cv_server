@@ -103,7 +103,7 @@ class Certification(models.Model):
 class CVResume(models.Model):
     personal_info = models.ForeignKey(PersonalInfo, on_delete=models.CASCADE)
     education = models.ForeignKey(Education, on_delete=models.CASCADE)
-    workExperience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
+    work_experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
     certification = models.ForeignKey(Certification, on_delete=models.CASCADE)
     skills = models.ManyToManyField(Skill, through='CVSkill')
     prifile_picture = models.ForeignKey(ProfilePhoto,on_delete=models.CASCADE,null=True,blank=True)

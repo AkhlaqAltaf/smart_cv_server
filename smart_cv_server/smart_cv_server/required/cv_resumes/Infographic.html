@@ -113,7 +113,12 @@
         <div class="section-header">About Me</div>
         <div class="section-content">
             <div>
-                <p>{{ cv_resume.personal_info.about_me }}</p>
+                <p>{{ cv_resume.personal_info.email }}</p>
+                                <p>{{ cv_resume.personal_info.phone_number }}</p>
+                                                <p>{{ cv_resume.personal_info.address }}</p>
+
+
+
             </div>
         </div>
     </div>
@@ -148,9 +153,9 @@
         <div class="section-header">Certifications</div>
         <div class="section-content">
             <div>
-                <p><strong>Name:</strong> {{ cv_resume.certification.certification_name }}</p>
+                <p><strong>Name:</strong> {{ cv_resume.certification.name }}</p>
                 <p><strong>Issuer Name:</strong> {{ cv_resume.certification.issuer_name }}</p>
-                <p><strong>Certification Date:</strong> {{ cv_resume.certification.certification_date }}</p>
+                <p><strong>Certification Date:</strong> {{ cv_resume.certification.date }}</p>
             </div>
         </div>
     </div>
@@ -160,11 +165,12 @@
         <div class="section-content">
             <div class="progress-bar-container">
                 {% for skill in cv_resume.skills.all %}
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: {{ skill.proficiency }}%">{{ skill.name }} - {{ skill.proficiency }}%</div>
+                <div class="">
+                    <div class="">{{ skill.name }}</div>
                 </div>
                 {% endfor %}
             </div>
+
         </div>
     </div>
 

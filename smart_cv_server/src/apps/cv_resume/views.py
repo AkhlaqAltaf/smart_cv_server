@@ -4,9 +4,10 @@ import requests
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.template import Template
 from django.views.generic import TemplateView
 
-from smart_cv_server.settings import BASE_DIR
+from smart_cv_server.settings import BASE_DIR, model
 from src.apps.cv_resume.forms import CVResumeForm
 from src.apps.cv_resume.models import Certification, CVResume, CVSkill, WorkExperience, Education, PersonalInfo
 
@@ -103,19 +104,28 @@ from django.views.generic import TemplateView
 
 class CVResumeView(TemplateView):
     def get_template_names(self):
+
         template_type = self.kwargs.get('template_type', 'default')
         return [f'cv_resumes/{template_type}.html']
+
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request  # Save the request object
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         _id = self.kwargs['id']
         template_type = self.kwargs['template_type']
         cv_resume = get_object_or_404(CVResume, id=_id)
+        body = model.generate(gen_for='cv', type=template_type, object=cv_resume)
+        cv_resume.body = body
         context = super().get_context_data(**kwargs)
-        context['cv_resume'] = cv_resume
-        profile_pic_url = cv_resume.prifile_picture.profile_pic.url
 
-        style_file = os.path.join(BASE_DIR, 'static', 'css', 'templates', f'{template_type}.css')
+        profile_ = cv_resume.prifile_picture.profile_pic.url if cv_resume.prifile_picture else None
+        profile_pic_url = self.request.build_absolute_uri(profile_) if profile_ else None
+        context['cv_resume'] = cv_resume
+        context['profile_pic_url'] = profile_pic_url
+
+        style_file = os.path.join(BASE_DIR, 'static', 'css', 'required', f'{template_type}.css')
         context['style_file'] = style_file
-        context['profile_pic_url']=profile_pic_url
 
         return context

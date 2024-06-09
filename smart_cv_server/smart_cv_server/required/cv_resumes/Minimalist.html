@@ -102,12 +102,7 @@
         </div>
     </div>
 
-    <div class="section">
-        <div class="section-header">About Me</div>
-        <div class="section-content">
-            <p>{{ cv_resume.personal_info.about_me }}</p>
-        </div>
-    </div>
+
 
     <div class="section">
         <div class="section-header">Education</div>
@@ -134,9 +129,9 @@
     <div class="section">
         <div class="section-header">Certifications</div>
         <div class="section-content">
-            <p><strong>Name:</strong> {{ cv_resume.certification.certification_name }}</p>
+            <p><strong>Name:</strong> {{ cv_resume.certification.name }}</p>
             <p><strong>Issuer Name:</strong> {{ cv_resume.certification.issuer_name }}</p>
-            <p><strong>Certification Date:</strong> {{ cv_resume.certification.certification_date }}</p>
+            <p><strong>Certification Date:</strong> {{ cv_resume.certification.date }}</p>
         </div>
     </div>
 

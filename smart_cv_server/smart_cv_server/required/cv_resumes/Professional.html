@@ -5,106 +5,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative CV Template</title>
+    <title>Professional CV Template</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
-            background: linear-gradient(135deg, #f9f9f9 25%, #fff 25%, #fff 50%, #f9f9f9 50%, #f9f9f9 75%, #fff 75%, #fff 100%);
-            background-size: 28.28px 28.28px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
         .container {
-            max-width: 1200px;
-            margin: auto;
+            max-width: 900px;
+            margin: 20px auto;
             background: #fff;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            border-radius: 15px;
-            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
             display: flex;
-            flex-direction: column;
         }
-        .header {
-            background: linear-gradient(to right, #00c6ff, #0072ff);
-            color: #fff;
-            padding: 30px;
+        .sidebar {
+            background: #f0f0f0;
+            padding: 20px;
+            width: 30%;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
             text-align: center;
-            position: relative;
         }
-        .header img {
+        .profile-pic {
+            max-width: 150px;
             border-radius: 50%;
-            border: 4px solid #fff;
-            max-width: 120px;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            font-size: 36px;
-            margin: 10px 0;
-        }
-        .header p {
-            font-size: 18px;
+            margin-bottom: 15px;
         }
         .main-content {
             padding: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            width: 70%;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
         }
         .section {
-            width: 45%;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .section-header {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 10px;
-            color: #0072ff;
-            position: relative;
+            border-bottom: 2px solid #007BFF;
+            padding-bottom: 5px;
         }
-        .section-header::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 50px;
-            height: 4px;
-            background: #00c6ff;
-        }
-        .section-content {
-            background: #f1f1f1;
-            padding: 15px;
-            border-radius: 10px;
-        }
-        .contact-info {
-            list-style: none;
-            padding: 0;
-        }
-        .contact-info li {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-        .contact-info i {
-            margin-right: 10px;
-            color: #0072ff;
-        }
-        .skills ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .skills ul li {
-            background: #0072ff;
-            color: #fff;
-            padding: 5px 10px;
-            margin: 5px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-        .section-content p, .section-content ul {
-            margin: 0;
+        .section-content p {
+            margin: 5px 0;
         }
         .section-content ul {
             padding-left: 20px;
@@ -112,32 +66,37 @@
         .section-content ul li {
             margin-bottom: 5px;
         }
+        .contact-info {
+            list-style: none;
+            padding: 0;
+        }
+        .contact-info li {
+            margin-bottom: 10px;
+        }
+        .contact-info i {
+            margin-right: 10px;
+            color: #007BFF;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
+    <div class="sidebar">
         {% if profile_pic_url %}
-            <img src="{{ profile_pic_url }}" alt="Profile Image">
+            <img src="{{ profile_pic_url }}" alt="Profile Image" class="profile-pic">
         {% endif %}
         <h1>{{ cv_resume.personal_info.full_name }}</h1>
         <p>{{ cv_resume.personal_info.profession }}</p>
+        <ul class="contact-info">
+            <li><i class="fas fa-phone-alt"></i>{{ cv_resume.personal_info.phone_number }}</li>
+            <li><i class="fas fa-envelope"></i>{{ cv_resume.personal_info.email }}</li>
+            <li><i class="fas fa-map-marker-alt"></i>{{ cv_resume.personal_info.address }}</li>
+            <li><i class="fas fa-birthday-cake"></i>{{ cv_resume.personal_info.date_of_birth }}</li>
+            <li><i class="fas fa-flag"></i>{{ cv_resume.personal_info.nationality }}</li>
+        </ul>
     </div>
     <div class="main-content">
-        <div class="section">
-            <div class="section-header">Contact Information</div>
-            <div class="section-content">
-                <ul class="contact-info">
-                    <li><i class="fas fa-phone-alt"></i>{{ cv_resume.personal_info.phone_number }}</li>
-                    <li><i class="fas fa-envelope"></i>{{ cv_resume.personal_info.email }}</li>
-                    <li><i class="fas fa-map-marker-alt"></i>{{ cv_resume.personal_info.address }}</li>
-                    <li><i class="fas fa-birthday-cake"></i>{{ cv_resume.personal_info.date_of_birth }}</li>
-                    <li><i class="fas fa-flag"></i>{{ cv_resume.personal_info.nationality }}</li>
-                </ul>
-            </div>
-        </div>
-
         <div class="section">
             <div class="section-header">About Me</div>
             <div class="section-content">
@@ -170,13 +129,13 @@
         <div class="section">
             <div class="section-header">Certifications</div>
             <div class="section-content">
-                <p><strong>Name:</strong> {{ cv_resume.certification.certification_name }}</p>
+                <p><strong>Name:</strong> {{ cv_resume.certification.name }}</p>
                 <p><strong>Issuer Name:</strong> {{ cv_resume.certification.issuer_name }}</p>
-                <p><strong>Certification Date:</strong> {{ cv_resume.certification.certification_date }}</p>
+                <p><strong>Certification Date:</strong> {{ cv_resume.certification.date }}</p>
             </div>
         </div>
 
-        <div class="section skills">
+        <div class="section">
             <div class="section-header">Skills</div>
             <div class="section-content">
                 <ul>

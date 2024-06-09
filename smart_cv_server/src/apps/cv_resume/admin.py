@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (Language, PersonalLanguage, PersonalInfo, WorkExperience
-, Skill, CVSkill, CVResume, Certification, Education)
+, Skill, CVSkill, CVResume, Certification, Education,ProfilePhoto)
 
 
 @admin.register(PersonalInfo)
@@ -58,9 +58,13 @@ class CVSkillAdmin(admin.ModelAdmin):
     list_display = ['skill']
     search_fields = ['skill']
 
+@admin.register(ProfilePhoto)
+class CVSkillAdmin(admin.ModelAdmin):
+    list_display = ['profile_pic']
+    search_fields = ['profile_pic']
 
 # CV RESUME
 @admin.register(CVResume)
 class CVResumeAdmin(admin.ModelAdmin):
-    list_display = ['personal_info']
-    search_fields = ['personal_info']
+    list_display = ['personal_info','id']
+    search_fields = ['personal_info','id']

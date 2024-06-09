@@ -83,72 +83,33 @@
         </ul>
     </div>
 
-    <div class="section">
-        <div class="section-header">About Me</div>
-        <div class="section-content">
-            <p>{{ cv_resume.personal_info.about_me }}</p>
-        </div>
-    </div>
+
 
     <div class="section">
         <div class="section-header">Education</div>
         <div class="section-content">
-            {% for education in cv_resume.education.all %}
-            <p><strong>{{ education.degree }}</strong>, {{ education.field_of_study }}</p>
-            <p>{{ education.institute }} - {{ education.location }} ({{ education.graduation_year }})</p>
-            {% endfor %}
+            <p><strong>{{ cv_resume.education.name }}
+            </strong>, {{ cv_resume.education.field_of_study }}</p>
+            <p>{{ cv_resume.education.institute }} - {{ education.location }}
+                ({{cv_resume.education.graduation_year }})</p>
         </div>
     </div>
 
-    <div class="section">
-        <div class="section-header">Research Interests</div>
-        <div class="section-content">
-            <p>{{ cv_resume.research_interests }}</p>
-        </div>
-    </div>
+
 
     <div class="section">
         <div class="section-header">Work Experience</div>
         <div class="section-content">
-            {% for experience in cv_resume.work_experience.all %}
-            <p><strong>{{ experience.position }}</strong>, {{ experience.company }}</p>
-            <p>{{ experience.start_date }} - {{ experience.end_date }}</p>
-            <p>{{ experience.responsibilities }}</p>
-            {% endfor %}
+            <p><strong>{{ cv_resume.work_experience.position }}
+            </strong>, {{ cv_resume.work_experience.company }}</p>
+            <p>{{ cv_resume.work_experience.start_date }} - {{ cv_resume.work_experience.end_date }}</p>
+            <p>{{ cv_resume.work_experience.responsibilities }}</p>
         </div>
     </div>
 
-    <div class="section">
-        <div class="section-header">Publications</div>
-        <div class="section-content">
-            {% for publication in cv_resume.publications.all %}
-            <div class="publication">
-                <p><strong>{{ publication.title }}</strong></p>
-                <p>{{ publication.journal }} - {{ publication.date }}</p>
-                <p>{{ publication.authors }}</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">Awards and Honors</div>
-        <div class="section-content">
-            {% for award in cv_resume.awards.all %}
-            <p>{{ award.title }} - {{ award.year }}</p>
-            <p>{{ award.description }}</p>
-            {% endfor %}
-        </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">Professional Memberships</div>
-        <div class="section-content">
-            {% for membership in cv_resume.memberships.all %}
-            <p>{{ membership.organization }} - {{ membership.role }}</p>
-            {% endfor %}
-        </div>
-    </div>
+
 
     <div class="section">
         <div class="section-header">Skills</div>

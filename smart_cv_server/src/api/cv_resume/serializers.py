@@ -12,7 +12,8 @@ class LanguageSerializer(serializers.ModelSerializer):
 class ProfilePicSearializer(serializers.ModelSerializer):
     class Meta:
         model = ProfilePhoto
-        fields = '__all__'
+        fields = ['id', 'profile_pic']
+
 
 
 class PersonalInfoSerializer(serializers.ModelSerializer):
@@ -53,7 +54,6 @@ class CVResumeSerializer(serializers.ModelSerializer):
     workExperience = WorkExperienceSerializer()
     certification = CertificationSerializer()
     skills = SkillSerializer(many=True)
-    prifile_picture = ProfilePicSearializer(many=False)
 
 
 
@@ -67,37 +67,35 @@ class CVResumeSerializer(serializers.ModelSerializer):
         # Serialize the queryset
         serialized_data = self.__class__(cv_resumes, many=True).data
         return serialized_data
+
     def create(self, validated_data):
+        print("DATA IS HERE : ")
+        print(validated_data)
         personal_info_data = validated_data.pop('personal_info')
+        languages_data = personal_info_data.pop('languages')
         user = personal_info_data.pop('user')
-        user_instance = get_object_or_404(User, id=user)
 
-        profile_photo_data = personal_info_data.pop('profile_photo', None)
-        profile_photo_instance = None
-        if profile_photo_data:
-            profile_photo_instance = ProfilePhoto.objects.create(**profile_photo_data)
-
-        personal_info_instance = PersonalInfo.objects.create(user=user_instance, profile_photo=profile_photo_instance, **personal_info_data)
+        personal_info_instance = PersonalInfo.objects.create(user=user, **personal_info_data)
+        for language_data in languages_data:
+            language, _ = Language.objects.get_or_create(**language_data)
+            PersonalLanguage.objects.create(personal_info=personal_info_instance, language=language)
 
         education_data = validated_data.pop('education')
-        work_experience_data = validated_data.pop('workExperience')
+        work_experience_data = validated_data.pop('work_experience')
         certification_data = validated_data.pop('certification')
         skills_data = validated_data.pop('skills')
-        languages_data = personal_info_data.pop('languages')
+        profile_pic = validated_data.pop('prifile_picture')
 
         education_instance = Education.objects.create(**education_data)
         work_experience_instance = WorkExperience.objects.create(**work_experience_data)
         certification_instance = Certification.objects.create(**certification_data)
 
-        for language_data in languages_data:
-            language, create = Language.objects.get_or_create(**language_data)
-            PersonalLanguage.objects.create(personal_info=personal_info_instance, language=language)
-
         cv_resume = CVResume.objects.create(
             personal_info=personal_info_instance,
             education=education_instance,
-            workExperience=work_experience_instance,
-            certification=certification_instance
+            work_experience=work_experience_instance,
+            certification=certification_instance,
+            prifile_picture  =profile_pic
         )
 
         for skill_data in skills_data:

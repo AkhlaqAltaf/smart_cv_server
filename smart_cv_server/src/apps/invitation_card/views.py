@@ -36,8 +36,9 @@ class InvitationCardCreateView(TemplateView):
 
 
 class InvitationCardTemplateView(TemplateView):
-    template_name = 'templates/example_template.html'
-
+    def get_template_names(self):
+        template_type = self.kwargs.get('template_type', 'default')
+        return [f'invitation_cards/{template_type}.html']
     def get_context_data(self, **kwargs):
         _id = kwargs.get('id')
         invitation = get_object_or_404(Invitation, pk=_id)
@@ -50,7 +51,7 @@ class InvitationCardTemplateView(TemplateView):
     def post(self, request, *args, **kwargs):
         _id = kwargs.get('id')
         invitation = get_object_or_404(Invitation, pk=_id)
-        template = get_template('templates/example_template.html')
+        template = get_template('required/example_template.html')
         html = template.render({'invitation': invitation})
 
         soup = BeautifulSoup(html, 'html.parser')

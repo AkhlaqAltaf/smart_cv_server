@@ -4,7 +4,7 @@ from .models import (Invitation, HostDetails, EventDetails, MessageDetails)
 
 @admin.register(Invitation)
 class InvitationAdmin(admin.ModelAdmin):
-    list_display = ('event', 'host')
+    list_display = ('event', 'host','id')
     search_fields = ('event', 'host')
 
 
