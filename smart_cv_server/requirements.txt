@@ -11,3 +11,11 @@ dj-rest-auth==6.0.0
 drf-yasg==1.21.7
 setuptools==70.0.0
 WeasyPrint==62.1
+pandas
+
+
+langchain
+llama-cpp-python
+chromadb
+sentence_transformers
+langchain_community

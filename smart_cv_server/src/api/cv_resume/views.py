@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from weasyprint import HTML
 
 from smart_cv_server.settings import model
+from src.api.cv_resume.predict import gen
 from src.api.cv_resume.serializers import CVResumeSerializer, DownloadCVResumeSerializer, ProfilePicSearializer
 from src.apps.cv_resume.models import CVResume
 
@@ -62,6 +63,7 @@ class GetCVResumesView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, id):
+
         serializer = CVResumeSerializer()
         cv_resumes = serializer.get_cv_resumes(id)
         return Response(cv_resumes)
@@ -80,3 +82,9 @@ class ImageUploadAPIView(APIView):
             return Response({'id': instance.id, 'message': 'Image uploaded successfully'},
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GenerateTextView(APIView):
+    def  get(self, request, prompt):
+        gen()
+        return Response(prompt)
