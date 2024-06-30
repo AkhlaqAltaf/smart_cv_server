@@ -13,9 +13,3 @@ setuptools==70.0.0
 WeasyPrint==62.1
 pandas
 
-
-langchain
-llama-cpp-python
-chromadb
-sentence_transformers
-langchain_community
