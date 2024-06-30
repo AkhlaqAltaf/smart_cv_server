@@ -8,7 +8,6 @@ from rest_framework.views import APIView
 from weasyprint import HTML
 
 from smart_cv_server.settings import model
-from src.api.cv_resume.predict import gen
 from src.api.cv_resume.serializers import CVResumeSerializer, DownloadCVResumeSerializer, ProfilePicSearializer
 from src.apps.cv_resume.models import CVResume
 
@@ -84,7 +83,3 @@ class ImageUploadAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class GenerateTextView(APIView):
-    def  get(self, request, prompt):
-        gen()
-        return Response(prompt)

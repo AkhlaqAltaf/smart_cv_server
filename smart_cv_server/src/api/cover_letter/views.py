@@ -1,3 +1,4 @@
+import os
 from io import BytesIO
 from io import BytesIO
 
@@ -9,8 +10,10 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.utils import json
 from rest_framework.views import APIView
+from weasyprint import HTML, CSS
 from xhtml2pdf import pisa
 
+from smart_cv_server import settings
 from src.api.cover_letter.ai.generate import CoverLetterGenAI
 from src.api.cover_letter.serializers import CoverLetterSerializer
 from src.apps.cover_letter.models import CoverLetter
@@ -34,20 +37,24 @@ class DownloadCoverLetter(APIView):
         body = ai.generate_cover_letter_body(cover_letter=cover_letter)
         print(body)
         cover_letter.body = body
+
         template = get_template(f'cover_letters/{type}.html')
-        html = template.render({'cover_letter': cover_letter})
 
-        buffer = BytesIO()
-        pisa_status = pisa.CreatePDF(html, dest=buffer)
-        if pisa_status.err:
-            return HttpResponse('PDF generation error!', status=500)
+        # Read the Bootstrap CSS file content
+        css_path = os.path.join(settings.STATIC_URL, 'css/bootstrap.min.css')
+        with open(css_path, 'r') as css_file:
+            bootstrap_css = css_file.read()
 
-        pdf_data = buffer.getvalue()
-        buffer.close()
+        html_content = template.render({'cover_letter': cover_letter, 'bootstrap_css': bootstrap_css})
+
+        # Create a PDF using WeasyPrint
+        pdf_file = BytesIO()
+        HTML(string=html_content).write_pdf(pdf_file, stylesheets=[CSS(string=bootstrap_css)])
+        pdf_file.seek(0)
 
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{cover_letter.name}.pdf"'
-        response.write(pdf_data)
+        response.write(pdf_file.read())
 
         return response
 
