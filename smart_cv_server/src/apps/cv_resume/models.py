@@ -3,13 +3,6 @@ from django.db import models
 from smart_cv_server import settings
 
 
-# PERSONAL INFORMATION
-class Language(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
 
 class ProfilePhoto(models.Model):
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True, null=True)
@@ -19,6 +12,17 @@ class ProfilePhoto(models.Model):
         if self.profile_pic:
             return '{}{}'.format(settings.MEDIA_URL, self.profile_pic)
         return None
+
+
+
+# PERSONAL INFORMATION
+class Language(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
 
 class PersonalInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

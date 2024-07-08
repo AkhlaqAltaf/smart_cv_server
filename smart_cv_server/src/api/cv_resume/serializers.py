@@ -4,17 +4,16 @@ from src.apps.cv_resume.models import PersonalInfo, WorkExperience, Skill, Educa
     PersonalLanguage, CVSkill, Language, ProfilePhoto
 from django.contrib.auth.models import User
 
-
-class LanguageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Language
-        fields = '__all__'
 class ProfilePicSearializer(serializers.ModelSerializer):
     class Meta:
         model = ProfilePhoto
         fields = ['id', 'profile_pic']
 
 
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
+        fields = '__all__'
 
 class PersonalInfoSerializer(serializers.ModelSerializer):
     languages = LanguageSerializer(many=True)
@@ -51,7 +50,7 @@ class CertificationSerializer(serializers.ModelSerializer):
 class CVResumeSerializer(serializers.ModelSerializer):
     personal_info = PersonalInfoSerializer()
     education = EducationSerializer()
-    workExperience = WorkExperienceSerializer()
+    work_experience = WorkExperienceSerializer()
     certification = CertificationSerializer()
     skills = SkillSerializer(many=True)
 
@@ -69,6 +68,39 @@ class CVResumeSerializer(serializers.ModelSerializer):
         return serialized_data
 
     def create(self, validated_data):
+        personal_info_data = validated_data.pop('personal_info')
+        languages_data = personal_info_data.pop('languages')
+        education_data = validated_data.pop('education')
+        work_experience_data = validated_data.pop('work_experience')
+        certification_data = validated_data.pop('certification')
+        skills_data = validated_data.pop('skills')
+
+        personal_info = PersonalInfo.objects.create(**personal_info_data)
+
+        for language_data in languages_data:
+            language, created = Language.objects.get_or_create(name=language_data['name'])
+            PersonalLanguage.objects.create(personal_info=personal_info, language=language)
+
+        education = Education.objects.create(**education_data)
+        work_experience = WorkExperience.objects.create(**work_experience_data)
+        certification = Certification.objects.create(**certification_data)
+
+        cv_resume = CVResume.objects.create(
+            personal_info=personal_info,
+            education=education,
+            work_experience=work_experience,
+            certification=certification,
+            **validated_data
+        )
+
+        for skill_data in skills_data:
+            skill, created = Skill.objects.get_or_create(name=skill_data['name'])
+            CVSkill.objects.create(cv_resume=cv_resume, skill=skill)
+
+        return cv_resume
+
+
+    def create23(self, validated_data):
         print("DATA IS HERE : ")
         print(validated_data)
         personal_info_data = validated_data.pop('personal_info')

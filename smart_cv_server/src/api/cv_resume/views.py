@@ -12,6 +12,22 @@ from src.api.cv_resume.serializers import CVResumeSerializer, DownloadCVResumeSe
 from src.apps.cv_resume.models import CVResume
 
 
+class CVResumeViewSet(viewsets.ModelViewSet):
+    queryset = CVResume.objects.all()
+    serializer_class = CVResumeSerializer
+    permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
 class ResumeView(viewsets.ModelViewSet):
     queryset = CVResume.objects.all()
     serializer_class = CVResumeSerializer
@@ -27,7 +43,7 @@ class DownloadCvResumeView(APIView):
         template_type = kwargs.get('template_type')
         cv_resume = get_object_or_404(CVResume, pk=_id)
 
-        body = model.generate(gen_for='cv',type=template_type,object=cv_resume)
+        body = model.generate(gen_for='cv', type=template_type, object=cv_resume)
         cv_resume.body = body
 
         if cv_resume.prifile_picture:
@@ -62,7 +78,6 @@ class GetCVResumesView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, id):
-
         serializer = CVResumeSerializer()
         cv_resumes = serializer.get_cv_resumes(id)
         return Response(cv_resumes)
@@ -73,13 +88,10 @@ class ImageUploadAPIView(APIView):
 
     def post(self, request, format=None):
         serializer = ProfilePicSearializer(data=request.data)
-        print("IMAGE DATA .................................................")
         if serializer.is_valid():
-            # print(serializer.data)
-
+            print(request.data)
             instance = serializer.save()
+
             return Response({'id': instance.id, 'message': 'Image uploaded successfully'},
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-

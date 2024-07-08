@@ -4,11 +4,14 @@ from rest_framework import routers
 
 from smart_cv_server import settings
 from .views import ResumeView, DownloadCvResumeView, CVResumeCreateView, GetCVResumesView, ImageUploadAPIView
+from .views import CVResumeViewSet
+
 
 app_name = 'cv_resume'
 
 router = routers.DefaultRouter()
 router.register(r'', ResumeView)
+# router.register(r'cv_resumes', CVResumeViewSet, basename='cv_resume')
 
 urlpatterns = [
                   path('', include(router.urls)),
